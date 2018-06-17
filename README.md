@@ -95,6 +95,6 @@
     │              DeployApplicationTest.java   // 测试类 
     │
     └─resources
-            simplelogger.properties // c
+            simplelogger.properties // 测试日志配置
 
 ```
