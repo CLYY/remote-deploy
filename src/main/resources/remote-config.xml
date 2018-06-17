@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <remote active="true" user="root" password="12345678" ip="127.0.0.1">
+        <update active="false">
+            <files local="F:\test\" remote="" remoteName="" remoteBakPath="" isCleanUp="true" >
+                <file remote="/root/test/"/>
+            </files>
+        </update>
+        <update-after>
+            <command>ls /root/test</command>
+        </update-after>
+    </remote>
+
+</configuration>
