@@ -40,8 +40,8 @@ public class DeployApplication {
 	public static void main(String[] args) throws Exception{
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("******************************");
-		System.out.println("*         1：确认上传         *");
-		System.out.println("*         0：取消退出         *");
+		System.out.println("*         1：确认执行         *");
+		System.out.println("*         0：取消执行         *");
 		System.out.println("******************************");
 		System.out.print("请输入你的选择：");
 		String print = scanner.next();
