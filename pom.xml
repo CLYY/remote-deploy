@@ -16,8 +16,12 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.test.skip>true</maven.test.skip>
 
+        <maven.test.skip>true</maven.test.skip>
+        <build.root.dir>${project.basedir}/build</build.root.dir>
+        <build.config.dir>${build.root.dir}/config</build.config.dir>
+        <build.lib.dir>${build.root.dir}/lib</build.lib.dir>
+        <build.bin.dir>${build.root.dir}/bin</build.bin.dir>
     </properties>
 
     <dependencies>
@@ -32,6 +36,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.mina</groupId>
+            <artifactId>mina-core</artifactId>
+            <version>2.0.19</version>
+        </dependency>
+
 
         <dependency>
             <groupId>dom4j</groupId>
@@ -61,12 +72,15 @@
 
     <build>
         <plugins>
+
+            <!-- 编译模块Jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.0.2</version>
                 <executions>
                     <execution>
+                        <id>default-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
@@ -79,6 +93,57 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <!-- 拷贝依赖 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${build.lib.dir}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--  -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <delete dir="${build.bin.dir}/"></delete>
+                                <delete dir="${build.config.dir}/"></delete>
+                                <copy todir="${build.lib.dir}" overwrite="true" >
+                                    <fileset dir="${project.build.directory}" erroronmissingdir="false">
+                                        <include name="*.jar"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${build.config.dir}" overwrite="true" >
+                                    <fileset dir="${project.build.outputDirectory}" erroronmissingdir="false">
+                                        <include name="*.xml"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${build.bin.dir}" overwrite="true" >
+                                    <fileset dir="${project.basedir}/bin" erroronmissingdir="false"/>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
