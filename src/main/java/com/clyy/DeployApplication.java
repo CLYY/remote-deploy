@@ -1,5 +1,7 @@
 package com.clyy;
 
+import com.clyy.common.XmlNodeConstant;
+import com.clyy.entity.GlobalConfig;
 import com.clyy.entity.Remote;
 import com.clyy.entity.RemoteLink;
 import com.clyy.entity.UpdateFile;
@@ -38,17 +40,6 @@ public class DeployApplication {
 	}
 
 	public static void main(String[] args) throws Exception{
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("******************************");
-		System.out.println("*         1：确认执行         *");
-		System.out.println("*         0：取消执行         *");
-		System.out.println("******************************");
-		System.out.print("请输入你的选择：");
-		String print = scanner.next();
-		if(!"1".equals(print)) {
-			System.exit(0);
-		}
-
 		// 获取配置文件
 		if(configPath == null || configPath.trim().length() == 0) {
 			throw new NullPointerException("无[remote.config]配置");
@@ -72,7 +63,23 @@ public class DeployApplication {
 		List<Remote> remoteList = new ArrayList<>();
 		// 解析配置文件
 		Element root = document.getRootElement();
-		List<Element> remoteNodes = root.elements("remote");
+
+		Element global = root.element(XmlNodeConstant.GLOBAL);
+		GlobalConfig globalConfig = getGlobalConfig(global);
+		if(globalConfig.isExecuteConfirm()) {
+			Scanner scanner = new Scanner(System.in);
+			System.out.println("******************************");
+			System.out.println("*         1：确认执行         *");
+			System.out.println("*         0：取消执行         *");
+			System.out.println("******************************");
+			System.out.print("请输入你的选择：");
+			String print = scanner.next();
+			if(!"1".equals(print)) {
+				System.exit(0);
+			}
+		}
+
+		List<Element> remoteNodes = root.elements(XmlNodeConstant.REMOTE);
 		for(Element element : remoteNodes) {
 			if(!isActive(element)) {
 				continue;
@@ -107,6 +114,28 @@ public class DeployApplication {
 	}
 
 	/**
+	 * 获取全局设置
+	 * @param global
+	 * @return
+	 * @throws Exception
+	 */
+	private static GlobalConfig getGlobalConfig(Element global) throws Exception {
+		GlobalConfig config = new GlobalConfig();
+		if(global == null) {
+			return config;
+		}
+		Element executeConfirm = global.element(XmlNodeConstant.EXECUTE_CONFIRM);
+		if(executeConfirm != null ) {
+			String confirm = executeConfirm.getText();
+			if("false".equals(confirm)) {
+				config.setExecuteConfirm(false);
+			}
+		}
+
+		return config;
+	}
+
+	/**
 	 * 解析Remote节点
 	 * @param remoteNode
 	 * @return
@@ -117,18 +146,18 @@ public class DeployApplication {
 
 		// 获取连接配置
 		RemoteLink remoteLink = new RemoteLink();
-		remoteLink.setIp(getValue(remoteNode, "ip"));
-		remoteLink.setPassword(getValue(remoteNode, "password"));
-		String port = remoteNode.attributeValue("port");
+		remoteLink.setIp(getValue(remoteNode, XmlNodeConstant.ATTR_IP));
+		remoteLink.setPassword(getValue(remoteNode, XmlNodeConstant.ATTR_PASSWORD));
+		String port = remoteNode.attributeValue(XmlNodeConstant.ATTR_PORT);
 		if(port != null && port.trim().length() > 0) {
 			remoteLink.setPort(Integer.valueOf(port.trim()));
 		}
-		remoteLink.setUser(getValue(remoteNode, "user"));
+		remoteLink.setUser(getValue(remoteNode, XmlNodeConstant.ATTR_USER));
 		remote.setRemoteLink(remoteLink);
 
 		// 获取上传文件配置
 		List<UpdateFile> updateFiles = new ArrayList<>();
-		List<Element> updateNodes = remoteNode.elements("update");
+		List<Element> updateNodes = remoteNode.elements(XmlNodeConstant.UPDATE);
 		for(Element element : updateNodes) {
 			if(!isActive(element)) {
 				continue;
@@ -141,7 +170,7 @@ public class DeployApplication {
 		}
 		remote.setUpdateFiles(updateFiles);
 
-		Element updateAfterNode = remoteNode.element("update-after");
+		Element updateAfterNode = remoteNode.element(XmlNodeConstant.UPDATE_AFTER);
 		if(updateAfterNode != null) {
 			remote.setCommands(parseCommand(updateAfterNode));
 		}
@@ -156,14 +185,14 @@ public class DeployApplication {
 	 * @throws Exception
 	 */
 	private static List<UpdateFile> parseUpdateFile(Element updateNode) throws Exception {
-		Element filesNode = updateNode.element("files");
+		Element filesNode = updateNode.element(XmlNodeConstant.FILES);
 		if(filesNode == null) {
 			return null;
 		}
 
 		List<UpdateFile> updateFiles = new ArrayList<>();
 		UpdateFile commonUpdateFile = getUpdateFile(filesNode);
-		List<Element> fileNodes = filesNode.elements("file");
+		List<Element> fileNodes = filesNode.elements(XmlNodeConstant.FILE);
 		for(Element element : fileNodes) {
 			UpdateFile updateFile = getUpdateFile(element);
 			if(isReplace(updateFile.getLocal(), commonUpdateFile.getLocal())) {
@@ -194,12 +223,17 @@ public class DeployApplication {
 		return false;
 	}
 
+	/**
+	 * 获取需要上传的文件配置
+	 * @param fileNode
+	 * @return
+	 */
 	private static UpdateFile getUpdateFile(Element fileNode) {
-		String local = fileNode.attributeValue("local");
-		String remote = fileNode.attributeValue("remote");
-		String remoteName = fileNode.attributeValue("remoteName");
-		String remoteBakPath = fileNode.attributeValue("remoteBakPath");
-		String isCleanUp = fileNode.attributeValue("isCleanUp");
+		String local = fileNode.attributeValue(XmlNodeConstant.ATTR_LOCAL);
+		String remote = fileNode.attributeValue(XmlNodeConstant.ATTR_REMOTE);
+		String remoteName = fileNode.attributeValue(XmlNodeConstant.ATTR_REMOTENAME);
+		String remoteBakPath = fileNode.attributeValue(XmlNodeConstant.ATTR_REMOTEBAKPATH);
+		String isCleanUp = fileNode.attributeValue(XmlNodeConstant.ATTR_ISCLEANUP);
 
 		UpdateFile updateFile = new UpdateFile(local, remote, remoteName, remoteBakPath);
 		updateFile.setCleanUp(Boolean.parseBoolean(isCleanUp));
@@ -213,7 +247,7 @@ public class DeployApplication {
 	 * @throws Exception
 	 */
 	private static List<String> parseCommand(Element updateAfterNode) throws Exception {
-		List<Element> commandNodes = updateAfterNode.elements("command");
+		List<Element> commandNodes = updateAfterNode.elements(XmlNodeConstant.COMMAND);
 		if(commandNodes == null || commandNodes.size() == 0) {
 			return null;
 		}
@@ -234,7 +268,7 @@ public class DeployApplication {
 	 * @return
 	 */
 	private static boolean isActive(Element element) {
-		String active = element.attributeValue("active");
+		String active = element.attributeValue(XmlNodeConstant.ATTR_ACTIVE);
 		if("false".equals(active)) {
 			return false;
 		}

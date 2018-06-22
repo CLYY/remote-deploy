@@ -32,8 +32,8 @@ public class RemoteConnection implements AutoCloseable {
 		client.start();
 		ConnectFuture connectFuture = client.connect(remoteLink.getUser(), remoteLink.getIp(), remoteLink.getPort());
 		connectFuture.await();
-		session = connectFuture.getSession();
 
+		session = connectFuture.getSession();
 		session.addPasswordIdentity(remoteLink.getPassword());
 		AuthFuture authFuture = session.auth();
 		authFuture.await();
