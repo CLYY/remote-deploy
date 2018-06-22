@@ -1,7 +1,12 @@
 # remote-deploy
 用于远程部署项目，通过xml配置，上传文件并执行指定命令。
 
-**最终构建目录**
+#### 运行目录构建
+```text
+运行MAVEN的package命令，将在Root目录下构建一个build目录
+```
+
+####最终构建目录
 ```
 成功构建后配置remote-config.xml，并执行start.bat即可完成部署操作。
 日志配置文件内置在remote-deploy-*.jar中，默认输出到控制台。
@@ -21,10 +26,16 @@
         xml-apis-1.0.b2.jar
 ```
 
-**remote-config.xml使用说明**
+####remote-config.xml使用说明
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <!-- 全局配置 
+        <execute-confirm>：执行前是否需要进行确认，默认：true，可不配置
+    -->
+    <global>
+        <execute-confirm>true</execute-confirm>
+    </global>
     <!--
     <remote/>：远端操控配置，可以配置多个
     active：是否激活当前节点，若active="false"则表示不激活，不配或其他值均表示激活
@@ -68,7 +79,7 @@
 
 </configuration>
 ```
-**Code目录结构**
+####Code目录结构
 ```text
 ├─main
 │  ├─java
