@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <global>
+        <execute-confirm>true</execute-confirm>
+    </global>
+
     <remote active="true" user="root" password="12345678" ip="127.0.0.1">
         <update active="false">
             <files local="F:\test\" remote="" remoteName="" remoteBakPath="" isCleanUp="true" >
