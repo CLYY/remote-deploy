@@ -27,6 +27,7 @@
 ```
 
 ####remote-config.xml使用说明
+>注意：若配置&lt;command&gt;标签的数据是执行shell脚本的，需要保证脚本能正确加载环境配置，否则容易出现字符乱码，可配置脚本头部为“#!/bin/bash --login”，进行强制加载
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
