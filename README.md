@@ -31,7 +31,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <!-- 全局配置 
-        <execute-confirm>：执行前是否需要进行确认，默认：true，可不配置
     -->
     <global>
         <execute-confirm>true</execute-confirm>

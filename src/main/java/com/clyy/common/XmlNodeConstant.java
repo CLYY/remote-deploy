@@ -8,7 +8,6 @@ package com.clyy.common;
 public class XmlNodeConstant {
 
 	public static final String GLOBAL = "global";
-	public static final String EXECUTE_CONFIRM = "execute-confirm";
 	public static final String REMOTE = "remote";
 	public static final String ATTR_ACTIVE = "active";
 	public static final String ATTR_IP = "ip";

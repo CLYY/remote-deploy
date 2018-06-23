@@ -66,18 +66,6 @@ public class DeployApplication {
 
 		Element global = root.element(XmlNodeConstant.GLOBAL);
 		GlobalConfig globalConfig = getGlobalConfig(global);
-		if(globalConfig.isExecuteConfirm()) {
-			Scanner scanner = new Scanner(System.in);
-			System.out.println("******************************");
-			System.out.println("*         1：确认执行         *");
-			System.out.println("*         0：取消执行         *");
-			System.out.println("******************************");
-			System.out.print("请输入你的选择：");
-			String print = scanner.next();
-			if(!"1".equals(print)) {
-				System.exit(0);
-			}
-		}
 
 		List<Element> remoteNodes = root.elements(XmlNodeConstant.REMOTE);
 		for(Element element : remoteNodes) {
@@ -124,13 +112,13 @@ public class DeployApplication {
 		if(global == null) {
 			return config;
 		}
-		Element executeConfirm = global.element(XmlNodeConstant.EXECUTE_CONFIRM);
+		/*Element executeConfirm = global.element(XmlNodeConstant.EXECUTE_CONFIRM);
 		if(executeConfirm != null ) {
 			String confirm = executeConfirm.getText();
 			if("false".equals(confirm)) {
 				config.setExecuteConfirm(false);
 			}
-		}
+		}*/
 
 		return config;
 	}

@@ -2,7 +2,6 @@
 <configuration>
 
     <global>
-        <execute-confirm>true</execute-confirm>
     </global>
 
     <remote active="true" user="root" password="12345678" ip="127.0.0.1">

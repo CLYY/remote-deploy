@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 public class RemoteConnection implements AutoCloseable {
 	private final static Logger logger = LoggerFactory.getLogger(RemoteConnection.class);
 
-	private ClientSession session;
 	private SshClient client;
+	private ClientSession session;
 	private SftpClient sftpClient;
 
 	/**
@@ -62,6 +62,7 @@ public class RemoteConnection implements AutoCloseable {
 			session.close();
 		}
 		if(client != null) {
+			client.stop();
 			client.close();
 		}
 	}
