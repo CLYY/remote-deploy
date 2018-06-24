@@ -10,6 +10,13 @@ public class GlobalConfig {
 	// 是否进行执行前的确认流程
 	private boolean executeConfirm = true;
 
+	@Override
+	public String toString() {
+		return "GlobalConfig{" +
+				"executeConfirm=" + executeConfirm +
+				'}';
+	}
+
 	public boolean isExecuteConfirm() {
 		return executeConfirm;
 	}

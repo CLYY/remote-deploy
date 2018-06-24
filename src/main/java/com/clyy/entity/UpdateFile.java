@@ -51,6 +51,7 @@ public class UpdateFile {
 				", remote='" + remote + '\'' +
 				", remoteName='" + remoteName + '\'' +
 				", remoteBakPath='" + remoteBakPath + '\'' +
+				", isCleanUp=" + isCleanUp +
 				'}';
 	}
 

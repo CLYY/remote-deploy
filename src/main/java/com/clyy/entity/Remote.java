@@ -11,7 +11,7 @@ public class Remote {
 
 	private RemoteLink remoteLink;
 	private List<UpdateFile> updateFiles;
-	private List<String> commands;
+	private List<ExecuteCommand> commands;
 
 	@Override
 	public String toString() {
@@ -38,11 +38,11 @@ public class Remote {
 		this.updateFiles = updateFiles;
 	}
 
-	public List<String> getCommands() {
+	public List<ExecuteCommand> getCommands() {
 		return commands;
 	}
 
-	public void setCommands(List<String> commands) {
+	public void setCommands(List<ExecuteCommand> commands) {
 		this.commands = commands;
 	}
 }
