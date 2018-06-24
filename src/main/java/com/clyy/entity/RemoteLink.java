@@ -29,7 +29,7 @@ public class RemoteLink {
 	public String toString() {
 		return "RemoteLink{" +
 				"user='" + user + '\'' +
-				", password='" + password + '\'' +
+				", password='********'" +
 				", ip='" + ip + '\'' +
 				", port=" + port +
 				'}';
