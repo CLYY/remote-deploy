@@ -1,10 +1,7 @@
 package com.clyy;
 
 import com.clyy.common.XmlNodeConstant;
-import com.clyy.entity.GlobalConfig;
-import com.clyy.entity.Remote;
-import com.clyy.entity.RemoteLink;
-import com.clyy.entity.UpdateFile;
+import com.clyy.entity.*;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -15,7 +12,6 @@ import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Auther: Charles.Chen <br>
@@ -89,8 +85,16 @@ public class DeployApplication {
 				}
 
 				if(remote.getCommands() != null && remote.getCommands().size() > 0) {
-					for(String command : remote.getCommands()) {
-						RemoteCommand.execute(connection.getSession(), command);
+					for(ExecuteCommand command : remote.getCommands()) {
+						try {
+							RemoteCommand.execute(connection.getSession(), command.getCommand());
+						} catch (Exception e) {
+							if(!command.isAllowsException()) {
+								throw e;
+							} else {
+								logger.error("{}, 执行异常", command.getCommand(), e);
+							}
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -234,18 +238,24 @@ public class DeployApplication {
 	 * @return
 	 * @throws Exception
 	 */
-	private static List<String> parseCommand(Element updateAfterNode) throws Exception {
+	private static List<ExecuteCommand> parseCommand(Element updateAfterNode) throws Exception {
 		List<Element> commandNodes = updateAfterNode.elements(XmlNodeConstant.COMMAND);
 		if(commandNodes == null || commandNodes.size() == 0) {
 			return null;
 		}
-		List<String> commands = new ArrayList<>();
+		List<ExecuteCommand> commands = new ArrayList<>();
 		for(Element element : commandNodes) {
+			ExecuteCommand command = new ExecuteCommand();
 			String cmd = element.getText();
 			if(cmd == null || cmd.trim().length() == 0) {
 				continue;
 			}
-			commands.add(cmd);
+			command.setCommand(cmd);
+			String allowsException = element.attributeValue(XmlNodeConstant.ATTR_ALLOWS_EXCEPTIONS);
+			if(allowsException != null && allowsException.trim().length() > 0) {
+				command.setAllowsException(Boolean.parseBoolean(allowsException.trim()));
+			}
+			commands.add(command);
 		}
 		return commands;
 	}

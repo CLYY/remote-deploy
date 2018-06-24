@@ -14,13 +14,13 @@ public class ExecuteCommand {
 	/**
 	 * 是否允许异常
 	 */
-	private boolean allowsExceptions;
+	private boolean allowsException;
 
 	@Override
 	public String toString() {
 		return "ExecuteCommand{" +
 				"command='" + command + '\'' +
-				", allowsExceptions=" + allowsExceptions +
+				", allowsExceptions=" + allowsException +
 				'}';
 	}
 
@@ -32,11 +32,11 @@ public class ExecuteCommand {
 		this.command = command;
 	}
 
-	public boolean isAllowsExceptions() {
-		return allowsExceptions;
+	public boolean isAllowsException() {
+		return allowsException;
 	}
 
-	public void setAllowsExceptions(boolean allowsExceptions) {
-		this.allowsExceptions = allowsExceptions;
+	public void setAllowsException(boolean allowsException) {
+		this.allowsException = allowsException;
 	}
 }

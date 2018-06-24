@@ -27,11 +27,11 @@
 ```
 
 ####remote-config.xml使用说明
->注意：若配置&lt;command&gt;标签的数据是执行shell脚本的，需要保证脚本能正确加载环境配置，否则容易出现字符乱码，可配置脚本头部为“#!/bin/bash --login”，进行强制加载
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <!-- 全局配置 
+    <!-- 全局配置
+        <execute-confirm>：执行前是否需要进行确认，默认：true，可不配置
     -->
     <global>
         <execute-confirm>true</execute-confirm>
@@ -72,40 +72,11 @@
         <update-after>
             <!--
             <command/>：远端执行命令，可配置多个
+            allows-exception：是否允许执行异常。若为“true”表示允许，发生异常后将继续执行其他命令；若为“false”，发生异常后将终端所有后续流程。默认为“false”，可不配置
             -->
-            <command>ls /root/test</command>
+            <command allows-exception="true">ls /root/test</command>
         </update-after>
     </remote>
 
 </configuration>
-```
-####Code目录结构
-```text
-├─main
-│  ├─java
-│  │  └─com
-│  │      └─clyy
-│  │          │  DeployApplication.java // 启动类，负责解析xml并执行任务
-│  │          │  RemoteCommand.java // 命令执行器
-│  │          │  RemoteConnection.java // 远端链接器
-│  │          │  RemoteUpdate.java // 文件上传器
-│  │          │
-│  │          └─entity
-│  │                  Remote.java // 装载xml<remote/>数据
-│  │                  RemoteLink.java // 装载xml<remote/>属性数据
-│  │                  UpdateFile.java // 装载xml<update/>数据
-│  │
-│  └─resources
-│          remote-config.xml    // 数据配置文件模版
-│          simplelogger.properties  // 日志配置
-│
-└─test
-    ├─java
-    │  └─com
-    │      └─clyy
-    │              DeployApplicationTest.java   // 测试类 
-    │
-    └─resources
-            simplelogger.properties // 测试日志配置
-
 ```

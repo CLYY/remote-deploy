@@ -11,7 +11,7 @@
             </files>
         </update>
         <update-after>
-            <command>ls /root/test</command>
+            <command allows-exception="true">ls /root/test</command>
         </update-after>
     </remote>
 

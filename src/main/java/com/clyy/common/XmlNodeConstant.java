@@ -24,5 +24,6 @@ public class XmlNodeConstant {
 	public static final String ATTR_ISCLEANUP = "isCleanUp";
 	public static final String UPDATE_AFTER = "update-after";
 	public static final String COMMAND = "command";
+	public static final String ATTR_ALLOWS_EXCEPTIONS = "allows-exception";
 
 }
